@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Staff - Tours & Travels ERP{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2><i class="fas fa-people-group"></i> Staff Management</h2>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{{ url_for('staff.add_staff') }}" class="btn btn-primary">
+            <i class="fas fa-user-plus"></i> Add Staff
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Position</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if staff.items %}
+                    {% for member in staff.items %}
+                    <tr>
+                        <td><strong>{{ member.first_name }} {{ member.last_name }}</strong></td>
+                        <td>{{ member.position }}</td>
+                        <td>{{ member.email }}</td>
+                        <td>{{ member.phone }}</td>
+                        <td>
+                            {% if member.availability == 'Available' %}
+                                <span class="badge bg-success">Available</span>
+                            {% elif member.availability == 'On Tour' %}
+                                <span class="badge bg-warning">On Tour</span>
+                            {% else %}
+                                <span class="badge bg-secondary">On Leave</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('staff.edit_staff', id=member.id) }}" class="btn btn-sm btn-warning">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form method="POST" action="{{ url_for('staff.delete_staff', id=member.id) }}" style="display:inline;" onsubmit="return confirm('Are you sure?');">
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">
+                            No staff found. <a href="{{ url_for('staff.add_staff') }}">Add one now</a>
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

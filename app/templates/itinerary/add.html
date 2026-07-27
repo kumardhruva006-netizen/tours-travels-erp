@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Add Itinerary - Tours & Travels ERP{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h2><i class="fas fa-plus"></i> Create New Tour Package</h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Package Details</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('itinerary.add_itinerary') }}">
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label for="package_name" class="form-label">Package Name *</label>
+                            <input type="text" class="form-control" id="package_name" name="package_name" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="origin" class="form-label">Origin *</label>
+                            <input type="text" class="form-control" id="origin" name="origin" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="destination" class="form-label">Destination *</label>
+                            <input type="text" class="form-control" id="destination" name="destination" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="duration_days" class="form-label">Duration (Days) *</label>
+                            <input type="number" class="form-control" id="duration_days" name="duration_days" min="1" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="price_per_person" class="form-label">Price per Person *</label>
+                            <input type="number" class="form-control" id="price_per_person" name="price_per_person" step="0.01" min="0" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="max_capacity" class="form-label">Max Capacity</label>
+                            <input type="number" class="form-control" id="max_capacity" name="max_capacity" value="50" min="1">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="best_season" class="form-label">Best Season</label>
+                            <input type="text" class="form-control" id="best_season" name="best_season" placeholder="e.g., March-May">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="includes" class="form-label">Includes (Comma Separated)</label>
+                        <textarea class="form-control" id="includes" name="includes" rows="3" placeholder="Hotel, Meals, Guide, etc."></textarea>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Create Package
+                        </button>
+                        <a href="{{ url_for('itinerary.list_itineraries') }}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

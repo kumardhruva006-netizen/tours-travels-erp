@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Itineraries - Tours & Travels ERP{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2><i class="fas fa-map"></i> Tour Packages</h2>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{{ url_for('itinerary.add_itinerary') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> New Package
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Package Name</th>
+                    <th>Route</th>
+                    <th>Duration</th>
+                    <th>Price/Person</th>
+                    <th>Capacity</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if itineraries.items %}
+                    {% for itinerary in itineraries.items %}
+                    <tr>
+                        <td><strong>{{ itinerary.package_name }}</strong></td>
+                        <td>{{ itinerary.origin }} → {{ itinerary.destination }}</td>
+                        <td>{{ itinerary.duration_days }} days</td>
+                        <td>₹{{ "%.2f"|format(itinerary.price_per_person) }}</td>
+                        <td>{{ itinerary.max_capacity }} persons</td>
+                        <td>
+                            <a href="{{ url_for('itinerary.edit_itinerary', id=itinerary.id) }}" class="btn btn-sm btn-warning">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form method="POST" action="{{ url_for('itinerary.delete_itinerary', id=itinerary.id) }}" style="display:inline;" onsubmit="return confirm('Are you sure?');">
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">
+                            No packages found. <a href="{{ url_for('itinerary.add_itinerary') }}">Create one now</a>
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
