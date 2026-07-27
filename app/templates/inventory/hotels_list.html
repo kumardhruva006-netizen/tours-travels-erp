@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Hotels - Tours & Travels ERP{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2><i class="fas fa-hotel"></i> Hotels Management</h2>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{{ url_for('inventory.add_hotel') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add Hotel
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Hotel Name</th>
+                    <th>City</th>
+                    <th>Rating</th>
+                    <th>Available Rooms</th>
+                    <th>Price/Night</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if hotels.items %}
+                    {% for hotel in hotels.items %}
+                    <tr>
+                        <td><strong>{{ hotel.hotel_name }}</strong></td>
+                        <td>{{ hotel.city }}</td>
+                        <td>{{ "⭐" * hotel.star_rating }}</td>
+                        <td>{{ hotel.available_rooms }}/{{ hotel.total_rooms }}</td>
+                        <td>₹{{ "%.2f"|format(hotel.price_per_night) }}</td>
+                        <td>
+                            <a href="{{ url_for('inventory.edit_hotel', id=hotel.id) }}" class="btn btn-sm btn-warning">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form method="POST" action="{{ url_for('inventory.delete_hotel', id=hotel.id) }}" style="display:inline;" onsubmit="return confirm('Are you sure?');">
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">
+                            No hotels found. <a href="{{ url_for('inventory.add_hotel') }}">Add one now</a>
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

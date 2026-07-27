@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Vehicle - Tours & Travels ERP{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h2><i class="fas fa-edit"></i> Edit Vehicle</h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">{{ vehicle.registration_number }}</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('inventory.edit_vehicle', id=vehicle.id) }}">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="vehicle_type" class="form-label">Vehicle Type *</label>
+                            <select class="form-select" id="vehicle_type" name="vehicle_type" required>
+                                <option value="Bus" {% if vehicle.vehicle_type == 'Bus' %}selected{% endif %}>Bus</option>
+                                <option value="Car" {% if vehicle.vehicle_type == 'Car' %}selected{% endif %}>Car</option>
+                                <option value="Taxi" {% if vehicle.vehicle_type == 'Taxi' %}selected{% endif %}>Taxi</option>
+                                <option value="Van" {% if vehicle.vehicle_type == 'Van' %}selected{% endif %}>Van</option>
+                                <option value="Coach" {% if vehicle.vehicle_type == 'Coach' %}selected{% endif %}>Coach</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="model" class="form-label">Model</label>
+                            <input type="text" class="form-control" id="model" name="model" value="{{ vehicle.model or '' }}">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="capacity" class="form-label">Capacity (Seats) *</label>
+                            <input type="number" class="form-control" id="capacity" name="capacity" value="{{ vehicle.capacity }}" min="1" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="mileage" class="form-label">Mileage (KM)</label>
+                            <input type="number" class="form-control" id="mileage" name="mileage" value="{{ vehicle.mileage or 0 }}" step="0.1" min="0">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="fuel_type" class="form-label">Fuel Type</label>
+                            <select class="form-select" id="fuel_type" name="fuel_type">
+                                <option value="Petrol" {% if vehicle.fuel_type == 'Petrol' %}selected{% endif %}>Petrol</option>
+                                <option value="Diesel" {% if vehicle.fuel_type == 'Diesel' %}selected{% endif %}>Diesel</option>
+                                <option value="CNG" {% if vehicle.fuel_type == 'CNG' %}selected{% endif %}>CNG</option>
+                                <option value="Electric" {% if vehicle.fuel_type == 'Electric' %}selected{% endif %}>Electric</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="daily_rate" class="form-label">Daily Rate</label>
+                            <input type="number" class="form-control" id="daily_rate" name="daily_rate" value="{{ vehicle.daily_rate or 0 }}" step="0.01" min="0">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="availability" class="form-label">Availability</label>
+                        <select class="form-select" id="availability" name="availability">
+                            <option value="Available" {% if vehicle.availability == 'Available' %}selected{% endif %}>Available</option>
+                            <option value="In Use" {% if vehicle.availability == 'In Use' %}selected{% endif %}>In Use</option>
+                            <option value="Under Maintenance" {% if vehicle.availability == 'Under Maintenance' %}selected{% endif %}>Under Maintenance</option>
+                        </select>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Update Vehicle
+                        </button>
+                        <a href="{{ url_for('inventory.list_vehicles') }}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

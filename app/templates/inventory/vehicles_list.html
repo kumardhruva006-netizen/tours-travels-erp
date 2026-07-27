@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Vehicles - Tours & Travels ERP{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2><i class="fas fa-car"></i> Vehicles Management</h2>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{{ url_for('inventory.add_vehicle') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add Vehicle
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Registration #</th>
+                    <th>Type</th>
+                    <th>Model</th>
+                    <th>Capacity</th>
+                    <th>Status</th>
+                    <th>Daily Rate</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if vehicles.items %}
+                    {% for vehicle in vehicles.items %}
+                    <tr>
+                        <td><strong>{{ vehicle.registration_number }}</strong></td>
+                        <td>{{ vehicle.vehicle_type }}</td>
+                        <td>{{ vehicle.model or 'N/A' }}</td>
+                        <td>{{ vehicle.capacity }} seats</td>
+                        <td>
+                            {% if vehicle.availability == 'Available' %}
+                                <span class="badge bg-success">Available</span>
+                            {% elif vehicle.availability == 'In Use' %}
+                                <span class="badge bg-warning">In Use</span>
+                            {% else %}
+                                <span class="badge bg-danger">Maintenance</span>
+                            {% endif %}
+                        </td>
+                        <td>₹{{ "%.2f"|format(vehicle.daily_rate or 0) }}</td>
+                        <td>
+                            <a href="{{ url_for('inventory.edit_vehicle', id=vehicle.id) }}" class="btn btn-sm btn-warning">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form method="POST" action="{{ url_for('inventory.delete_vehicle', id=vehicle.id) }}" style="display:inline;" onsubmit="return confirm('Are you sure?');">
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center text-muted py-4">
+                            No vehicles found. <a href="{{ url_for('inventory.add_vehicle') }}">Add one now</a>
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
