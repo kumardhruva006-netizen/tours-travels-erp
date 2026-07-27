@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Bookings - Tours & Travels ERP{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2><i class="fas fa-calendar-check"></i> Bookings</h2>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{{ url_for('bookings.add_booking') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> New Booking
+        </a>
+    </div>
+</div>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <form method="GET" class="row g-3">
+            <div class="col-md-6">
+                <select name="status" class="form-select">
+                    <option value="">All Status</option>
+                    <option value="Pending" {% if status == 'Pending' %}selected{% endif %}>Pending</option>
+                    <option value="Confirmed" {% if status == 'Confirmed' %}selected{% endif %}>Confirmed</option>
+                    <option value="Completed" {% if status == 'Completed' %}selected{% endif %}>Completed</option>
+                    <option value="Cancelled" {% if status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search"></i> Filter</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Booking #</th>
+                    <th>Customer</th>
+                    <th>Package</th>
+                    <th>Travel Date</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if bookings.items %}
+                    {% for booking in bookings.items %}
+                    <tr>
+                        <td><strong>{{ booking.booking_number }}</strong></td>
+                        <td>{{ booking.customer.first_name }} {{ booking.customer.last_name }}</td>
+                        <td>{{ booking.itinerary.package_name }}</td>
+                        <td>{{ booking.travel_date.strftime('%Y-%m-%d') }}</td>
+                        <td>₹{{ "%.2f"|format(booking.total_amount) }}</td>
+                        <td>
+                            {% if booking.status == 'Confirmed' %}
+                                <span class="badge bg-success">{{ booking.status }}</span>
+                            {% elif booking.status == 'Pending' %}
+                                <span class="badge bg-warning">{{ booking.status }}</span>
+                            {% elif booking.status == 'Completed' %}
+                                <span class="badge bg-info">{{ booking.status }}</span>
+                            {% else %}
+                                <span class="badge bg-danger">{{ booking.status }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('bookings.view_booking', id=booking.id) }}" class="btn btn-sm btn-info">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="{{ url_for('bookings.edit_booking', id=booking.id) }}" class="btn btn-sm btn-warning">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form method="POST" action="{{ url_for('bookings.delete_booking', id=booking.id) }}" style="display:inline;" onsubmit="return confirm('Are you sure?');">
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center text-muted py-4">
+                            No bookings found. <a href="{{ url_for('bookings.add_booking') }}">Create one now</a>
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

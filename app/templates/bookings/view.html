@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}View Booking - Tours & Travels ERP{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2><i class="fas fa-calendar-check"></i> Booking Details</h2>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{{ url_for('bookings.edit_booking', id=booking.id) }}" class="btn btn-warning">
+            <i class="fas fa-edit"></i> Edit
+        </a>
+        <a href="{{ url_for('bookings.list_bookings') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Booking Information</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Booking #:</strong> {{ booking.booking_number }}</p>
+                <p><strong>Customer:</strong> {{ booking.customer.first_name }} {{ booking.customer.last_name }}</p>
+                <p><strong>Package:</strong> {{ booking.itinerary.package_name }}</p>
+                <p><strong>Travel Date:</strong> {{ booking.travel_date.strftime('%Y-%m-%d') }}</p>
+                <p><strong>Return Date:</strong> {{ booking.return_date.strftime('%Y-%m-%d') }}</p>
+                <p><strong>Number of Persons:</strong> {{ booking.number_of_persons }}</p>
+                <p><strong>Total Amount:</strong> ₹{{ "%.2f"|format(booking.total_amount) }}</p>
+                <p><strong>Status:</strong> <span class="badge bg-info">{{ booking.status }}</span></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Additional Details</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Guide:</strong> {% if booking.assigned_guide %}{{ booking.assigned_guide.first_name }} {{ booking.assigned_guide.last_name }}{% else %}Not Assigned{% endif %}</p>
+                <p><strong>Special Requests:</strong> {{ booking.special_requests or 'None' }}</p>
+                <p><strong>Booking Date:</strong> {{ booking.booking_date.strftime('%Y-%m-%d') }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="payments-tab" data-bs-toggle="tab" data-bs-target="#payments" type="button" role="tab">Payments</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="invoices-tab" data-bs-toggle="tab" data-bs-target="#invoices" type="button" role="tab">Invoices</button>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="payments" role="tabpanel">
+                <div class="card">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Payment #</th>
+                                    <th>Amount</th>
+                                    <th>Method</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if payments %}
+                                    {% for payment in payments %}
+                                    <tr>
+                                        <td>{{ payment.payment_id }}</td>
+                                        <td>₹{{ "%.2f"|format(payment.amount) }}</td>
+                                        <td>{{ payment.payment_method }}</td>
+                                        <td><span class="badge bg-success">{{ payment.status }}</span></td>
+                                        <td>{{ payment.payment_date.strftime('%Y-%m-%d') }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr><td colspan="5" class="text-center text-muted py-4">No payments recorded</td></tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="invoices" role="tabpanel">
+                <div class="card">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Invoice #</th>
+                                    <th>Total Amount</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if invoices %}
+                                    {% for invoice in invoices %}
+                                    <tr>
+                                        <td><a href="{{ url_for('invoices.view_invoice', id=invoice.id) }}">{{ invoice.invoice_number }}</a></td>
+                                        <td>₹{{ "%.2f"|format(invoice.total_amount) }}</td>
+                                        <td><span class="badge bg-info">{{ invoice.status }}</span></td>
+                                        <td>{{ invoice.invoice_date.strftime('%Y-%m-%d') }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr><td colspan="4" class="text-center text-muted py-4">No invoices generated</td></tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
